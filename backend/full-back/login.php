@@ -43,7 +43,6 @@ try {
 
     $_SESSION['user_id'] = $result['id_users'];
     $_SESSION['user_username'] = htmlspecialchars($result['nome']);
-    $_SESSION['user_DM'] = $result['tipo_diabetes'];
     $_SESSION['last_regeneration'] = time();
 
     $pdo = null;
