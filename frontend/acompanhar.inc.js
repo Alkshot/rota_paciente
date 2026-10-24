@@ -28,9 +28,6 @@ async function get_encaminhamento() {
     }
 }
 
-
-get_encaminhamento().then()
-
 /* ---- Encaminhamentos fictícios ----
    etapa: 1 = Pedido enviado ... 5 = Retorno enviado à UBS, 6 = tudo concluído */
 const encaminhamentos = {
@@ -75,6 +72,7 @@ const encaminhamentos = {
 
 
         const dados = await get_encaminhamento();
+        console.log(dados);
         const cartao = document.querySelector(".cartao");
 
         // Código que não existe: mostra aviso no lugar da linha do tempo
