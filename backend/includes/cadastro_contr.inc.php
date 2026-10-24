@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 require_once 'cadastro_model.inc.php';
 
-function is_input_empty(string $username, string $pwd, string $email, int $age, int $DM) :bool
+function is_input_empty(string $username, string $pwd, string $email, string $unidade, string $tipo) :bool
 {
-    if (empty($username) || empty($pwd) || empty($email) || empty($age) || empty($DM)) {
+    if (empty($username) || empty($pwd) || empty($email || empty($unidade) || empty($tipo))) {
         return true;
     }
     return false;
@@ -34,3 +34,10 @@ function create_user(PDO $pdo, string $username, string $pwd, string $email, str
     set_user($pdo, $username, $pwd, $email, $tipo, $unidade);
 }
 
+function is_unidade_invalid(PDO $pdo, string $uni)
+{
+ if(!get_unidade_by_name($pdo, $uni)){
+    return false;
+ }
+ return true;
+}

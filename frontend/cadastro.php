@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Rota do Paciente - Cadastro</title>
   <link rel="stylesheet" href="style.css">
+  <script src='cadastro.inc.js' defer></script>
 </head>
 <body>
   <div class="tela-login">
@@ -29,7 +30,7 @@
         <p class="sub">Preencha os dados do profissional.</p>
 
         <!-- Na versão com PHP: action="cadastro.php" method="post" -->
-        <form action="index.html">
+        <form action="../backend/cadastro.php" method='POST'>
           <label for="nome">Nome completo</label>
           <input type="text" id="nome" name="nome" required>
 
@@ -42,11 +43,15 @@
             <option value="GESTOR">Gestor</option>
           </select>
 
-          <label for="unidade">Unidade de trabalho</label>
-          <input type="text" id="unidade" name="unidade" placeholder="Ex.: UBS Jardim das Flores" required>
+         
+          <label for="unidade">Unidade de trabalho</label> 
+           <div id='sels'>
 
-          <label for="usuario">Usuário</label>
-          <input type="text" id="usuario" name="usuario" required>
+          </div><!--
+          <input type="text" id="unidade" name="unidade" placeholder="Ex.: UBS Jardim das Flores" required> -->
+
+          <label for="Email">Email</label>
+          <input type="text" id="email" name="email" required>
 
           <label for="senha">Senha</label>
           <input type="password" id="senha" name="senha" required>
@@ -55,7 +60,7 @@
         </form>
 
         <div class="links">
-          <span>Já tem conta? <a href="index.html">Entrar</a></span>
+          <span>Já tem conta? <a href="index.php">Entrar</a></span>
         </div>
       </div>
     </section>

@@ -10,3 +10,10 @@ if(!password_verify($iPwd, $oPwdHash)){
 
 return false;
 }
+function is_input_empty(string $email,string $pwd) :bool
+{
+    if (empty($pwd) || empty($email)) {
+        return true;
+    }
+    return false;
+} 

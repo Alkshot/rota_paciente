@@ -12,24 +12,26 @@ function check_login_errors()
     }
 } 
 
+//TODO
 function login_input(){
 if(isset(['login_data']['email']) && !isset($_SESSION['errors_login']['email_registered']) && !isset($_SESSION['errors_login']['invalid_email'])
    && !empty($_SESSION['login_data']['email'])){
 
-echo'        <div class="campo">
-          <label for="email">E-mail</label>
-          <input type="email" id="email" name="email" value="'. $_SESSION['login_data']['email'].'" placeholder="seu@gmail.com">
-        </div>
+echo'       
+
+          <label for="email">Email</label>
+           <input type="text" id="email" value="'.$_SESSION['login_data']['email'].'" name="email" required>
 ';
 }else{
     
 echo '
-        <div class="campo">
-          <label for="email">E-mail</label>
-          <input type="email" id="email" name="email" placeholder="seu@email.com">
-        </div>';    
+          <label for="email">Email</label>
+           <input type="text" id="email" name="email" placeholder="Seu email" required>
+        ';    
 }
 
+        //  <label for="email">Email</label>
+        //   <input type="text" id="email" name="email" placeholder="Seu email" required>
 unset($_SESSION['login_data']);
 }
 

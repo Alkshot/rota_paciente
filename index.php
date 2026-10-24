@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 <?php
-if(isset($_SESSION['user_id'])){
-    header();
-}
-header('Location: frontend/index.html');
+header('Location: frontend/index.php');
 ?>
 
 </head>

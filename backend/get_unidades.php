@@ -4,7 +4,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     die();
 }
 
-require_once 'includes/get_unidades_contr';
+require_once 'includes/get_unidades_contr.inc.php';
 require_once 'includes/dbh.inc.php';
 
-echo get_unidades($pdo);
+echo json_encode(get_unidades($pdo));

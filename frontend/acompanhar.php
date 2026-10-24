@@ -6,6 +6,7 @@
   <title>Rota do Paciente - Acompanhamento</title>
   <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
+  <script src='acompanhar.inc.js' defer></script>
 </head>
 <body>
 
@@ -18,7 +19,6 @@
 
   <main class="paciente">
     <p class="codigo">CÓDIGO RP-7K3M9Q</p>
-    <h1>Olá, Maria S.</h1>
     <p class="sub">Acompanhe abaixo o andamento do seu encaminhamento.</p>
 
     <div class="cartao">

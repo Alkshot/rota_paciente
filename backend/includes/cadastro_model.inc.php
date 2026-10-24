@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 function get_email(PDO $pdo, string $email) :array|null
 {
-    $query = 'SELECT email from users where email = :email';
+    $query = 'SELECT email from usuarios where email = :email';
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':email', $email);
     $stmt->execute();
@@ -26,12 +26,13 @@ function get_user_by_email(PDO $pdo, string $email) :array|null
 
 function get_unidade_by_name(PDO $pdo, string $name){
 $query='SELECT * from unidades where nome = :nome';
-$stmt = $pdo->prepare($pdo);
+$stmt = $pdo->prepare($query);
 $stmt->bindParam(':nome', $name);
 $stmt->execute();
 $results = $stmt->fetch(PDO::FETCH_ASSOC);
-return $results['unidade_id'];
+return $results ? $results['unidade_id'] : null;
 }
+
 
 function set_user(PDO $pdo, string $username, string $pwd, string $email, string $tipo, string $unidade)
 {
@@ -45,7 +46,7 @@ values (:nome, :email, :senha_hash,:tipo, :uni )';
     $hashed_PWD = password_hash($pwd, PASSWORD_BCRYPT, $options);
 
 
-$unidade = get_unidade_by_name();
+$unidade = get_unidade_by_name($pdo, $unidade);
 
     $stmt->bindParam(':senha_hash', $hashed_PWD);
     $stmt->bindParam(':email', $email);

@@ -101,8 +101,8 @@ form .btn { width: 100%; margin-top: 24px; }
 .principal { flex: 1; }
 .barra { background: #fff; border-bottom: 1px solid var(--linha); padding: 14px 28px; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
 .barra input { max-width: 420px; background: var(--creme); }
-.barra .usuario { font-size: 14px; text-align: right; }
-.barra .usuario small { display: block; color: var(--cinza); font-size: 12px; }
+.barra .email { font-size: 14px; text-align: right; }
+.barra .email small { display: block; color: var(--cinza); font-size: 12px; }
 .conteudo { max-width: 720px; margin: 0 auto; padding: 50px 20px; text-align: center; }
 .conteudo .tag { font-size: 12px; letter-spacing: 2px; color: var(--cinza); text-transform: uppercase; }
 .conteudo h1 { font-size: 38px; font-weight: 500; margin: 6px 0; }

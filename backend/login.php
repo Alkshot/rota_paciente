@@ -1,6 +1,6 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: ../frontend/pages/login.php');
+    header('Location: ../frontend/index.php');
     die();
 }
 
