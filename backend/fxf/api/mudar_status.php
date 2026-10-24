@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
-require __DIR__ . '/../src/http.php';
-require __DIR__ . '/../src/auth.php';
-require __DIR__ . '/../src/fluxo.php';
-require __DIR__ . '/../src/contrarreferencia.php';
+require __DIR__ . '/src/http.php';
+require __DIR__ . '/src/auth.php';
+require __DIR__ . '/src/fluxo.php';
+require __DIR__ . '/src/contrareferencia.php';
+require __DIR__ . '/../../includes/conexao.php';
 
 iniciar_sessao_segura();
 exigir_metodo('POST');
@@ -21,7 +22,17 @@ if (!$id) {
     json_erro('encaminhamento_id inválido');
 }
 
-$enc = ['status' => 'EM_REGULACAO', 'origem_id' => 1, 'destino_id' => 5];
+$st = $pdo->prepare('SELECT statuss, origem_fk, destino_fk FROM encaminhamentos WHERE encaminhamento_id = ?');
+$st->execute([$id]);
+$linha = $st->fetch();
+if (!$linha) {
+    json_erro('Encaminhamento não encontrado', 404);
+}
+$enc = [
+    'status'     => $linha['statuss'],
+    'origem_id'  => (int) $linha['origem_fk'],
+    'destino_id' => (int) $linha['destino_fk']
+];
 
 $minhaUnidade = $usuario['unidade_id'];
 $ehDaMinhaUnidade = $usuario['perfil'] === 'UBS'
@@ -42,5 +53,10 @@ if ($novoStatus === 'CONTRARREFERENCIA_ENVIADA') {
         json_erro('Formulário incompleto', 422, ['campos' => $v['erros']]);
     }
 }
+
+$pdo->beginTransaction();
+$pdo->prepare('UPDATE encaminhamentos SET statuss = ? WHERE encaminhamento_id = ?')->execute([$novoStatus, $id]);
+$pdo->prepare('INSERT INTO eventos (encaminhamento_fk, etapa, usuario_fk, observacao, criado_em) VALUES (?,?,?,?,NOW())')->execute([$id, $novoStatus, $usuario['id'], $obs]);
+$pdo->commit();
 
 json_response(['ok' => true, 'status' => $novoStatus, 'rotulo' => rotulo_status($novoStatus)]);

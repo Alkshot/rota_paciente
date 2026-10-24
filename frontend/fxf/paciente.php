@@ -1,7 +1,7 @@
 <?php require __DIR__.'/inc/layout.php';
 $cod=strtoupper(trim($_GET['codigo']??'RP-7K3M9Q'));
 $r=$rastreio[$cod]??null;
-?><!doctype html><html lang="pt-br"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Acompanhamento</title><link rel="stylesheet" href="assets/style.css"></head><body>
+?><!doctype html><html lang="pt-br"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Acompanhamento</title><link rel="stylesheet" href="../assets/style.css"></head><body>
 <div class="top" style="justify-content:space-between"><b>Rota do Paciente</b><a class="muted" href="index.php">← Voltar ao início</a></div>
 <div class="wrap c">
 <?php if(!$r): ?><h1 class="t">Código não encontrado</h1><form><input name="codigo" placeholder="RP-XXXXXX" style="padding:10px"> <button class="btn">Buscar</button></form>

@@ -124,8 +124,19 @@ function iniciarAcompanhar() {
   if (consulta) consulta.style.display = dados.etapa === 3 ? "block" : "none";
 }
 
+function mostrarErroLogin() {
+  if (new URLSearchParams(window.location.search).get("erro") !== "1") return;
+  const form = document.querySelector('form[action="../backend/login.php"]');
+  if (!form) return;
+  const aviso = document.createElement("p");
+  aviso.style.cssText = "color:#b85c50;font-size:13px;margin-bottom:8px;";
+  aviso.textContent = "E-mail ou senha incorretos.";
+  form.insertAdjacentElement("afterbegin", aviso);
+}
+
 /* ---- Liga tudo quando a página termina de carregar ---- */
 document.addEventListener("DOMContentLoaded", () => {
   iniciarIndex();
   iniciarAcompanhar();
+  mostrarErroLogin();
 });

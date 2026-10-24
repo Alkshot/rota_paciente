@@ -62,7 +62,7 @@ function exigir_perfil(array $permitidos): array
 {
     $u = usuario_logado();
     if ($u === null) {
-        header('Location: /login.php');
+        header('Location: /rota_paciente/frontend/index.html');
         exit;
     }
     if (!in_array($u['perfil'], $permitidos, true)) {
