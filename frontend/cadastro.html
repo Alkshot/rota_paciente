@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rota do Paciente - Cadastro</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="tela-login">
+
+    <section class="lado-azul">
+      <div class="marca">
+        <div class="icone">⤴</div>
+        <div><strong>Rota do Paciente</strong><small>Rede integrada de saúde</small></div>
+      </div>
+      <div>
+        <span class="tag">Saúde conectada</span>
+        <h1>Faça parte da rede.</h1>
+        <p>Cadastre-se para criar, acompanhar e concluir encaminhamentos entre os pontos de atendimento.</p>
+      </div>
+      <div class="aviso">🛡 Ambiente demonstrativo com dados fictícios e privacidade por padrão.</div>
+    </section>
+
+    <section class="lado-form">
+      <div class="caixa">
+        <span class="tag">Novo acesso</span>
+        <h2>Cadastro</h2>
+        <p class="sub">Preencha os dados do profissional.</p>
+
+        <!-- Na versão com PHP: action="cadastro.php" method="post" -->
+        <form action="index.html">
+          <label for="nome">Nome completo</label>
+          <input type="text" id="nome" name="nome" required>
+
+          <label for="perfil">Perfil</label>
+          <select id="perfil" name="perfil" required>
+            <option value="">Selecione</option>
+            <option value="UBS">UBS</option>
+            <option value="ESPECIALIZADA">Especializada</option>
+            <option value="HOSPITAL">Hospital</option>
+            <option value="GESTOR">Gestor</option>
+          </select>
+
+          <label for="unidade">Unidade de trabalho</label>
+          <input type="text" id="unidade" name="unidade" placeholder="Ex.: UBS Jardim das Flores" required>
+
+          <label for="usuario">Usuário</label>
+          <input type="text" id="usuario" name="usuario" required>
+
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" name="senha" required>
+
+          <button class="btn" type="submit">Criar conta</button>
+        </form>
+
+        <div class="links">
+          <span>Já tem conta? <a href="index.html">Entrar</a></span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>

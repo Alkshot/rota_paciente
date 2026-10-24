@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rota do Paciente - Acompanhamento</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+  <header class="topo">
+    <div class="marca">
+      <div class="icone">⤴</div>
+      <div><strong>Rota do Paciente</strong><small>Acompanhamento do encaminhamento</small></div>
+    </div>
+  </header>
+
+  <main class="paciente">
+    <p class="codigo">CÓDIGO RP-7K3M9Q</p>
+    <h1>Olá, Maria S.</h1>
+    <p class="sub">Acompanhe abaixo o andamento do seu encaminhamento.</p>
+
+    <div class="cartao">
+
+      <div class="especialidade">
+        <div class="icone">♡</div>
+        <div><small>Especialidade</small><strong>Cardiologia</strong></div>
+      </div>
+
+      <div class="mensagem">
+        <strong>✓ Sua consulta foi agendada.</strong>
+        Confira a data e prepare os documentos indicados abaixo.
+      </div>
+
+      <!-- LINHA DO TEMPO: cada <li> é uma etapa.
+           Troque a classe para: feito (verde), atual (azul) ou proximo (apagado) -->
+      <ol class="timeline">
+        <li class="feito">
+          <span class="bolinha">✓</span>
+          <strong>Pedido enviado</strong>
+          <small>UBS Jardim das Flores • 18 out, 09:14</small>
+        </li>
+        <li class="feito">
+          <span class="bolinha">✓</span>
+          <strong>Análise concluída</strong>
+          <small>AME Centro • 19 out, 14:32</small>
+        </li>
+        <li class="atual">
+          <span class="bolinha">3</span>
+          <strong>Consulta agendada</strong>
+          <small>Etapa atual</small>
+        </li>
+        <li class="proximo">
+          <span class="bolinha">4</span>
+          <strong>Atendimento realizado</strong>
+          <small>Próxima etapa</small>
+        </li>
+        <li class="proximo">
+          <span class="bolinha">5</span>
+          <strong>Retorno enviado à UBS</strong>
+          <small>Próxima etapa</small>
+        </li>
+      </ol>
+
+      <div class="consulta">
+        <h3>🕒 Consulta agendada: Cardiologia</h3>
+        <div class="dados">
+          <div><small>Data</small><strong>12 de novembro</strong></div>
+          <div><small>Horário</small><strong>14:00</strong></div>
+          <div><small>Local</small><strong>AME Centro</strong><br><small>Av. Central, 450</small></div>
+        </div>
+        <strong style="font-size:13px">O que levar</strong>
+        <ul>
+          <li>Documento com foto e cartão SUS</li>
+          <li>Exames recentes e lista de medicamentos</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <p class="rodape">🛡 Esta página não exibe diagnóstico ou informações clínicas. Em caso de dúvida, procure sua UBS.</p>
+    <p class="rodape"><a href="index.html">← Voltar ao início</a></p>
+  </main>
+
+</body>
+</html>
