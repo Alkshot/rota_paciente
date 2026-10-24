@@ -26,27 +26,23 @@
     <section class="lado-form">
       <div class="caixa">
 
-        <!-- ACESSO DO PACIENTE (principal) -->
         <span class="tag">Para o paciente</span>
         <h2>Acompanhe seu encaminhamento</h2>
         <p class="sub">Digite o código que você recebeu na UBS.</p>
 
-        <!-- Na versão com PHP: action="acompanhar.php" method="get" -->
         <form action="acompanhar.html" method="get">
           <label for="codigo">Código do encaminhamento</label>
           <input type="text" id="codigo" name="codigo" placeholder="Ex.: RP-7K3M9Q" required>
           <button class="btn" type="submit">Acompanhar</button>
         </form>
 
-        <!-- ACESSO DOS PROFISSIONAIS -->
         <div class="divisor"><span>Sou profissional da rede</span></div>
 
         <p class="sub">UBS, Especializada ou Hospital</p>
 
-        <!-- Na versão com PHP: action="login.php" method="post" -->
-        <form action="ubs.html">
-          <label for="usuario">Usuário</label>
-          <input type="text" id="usuario" name="usuario" placeholder="Seu nome de usuário" required>
+        <form action="../backend/login.php" method="post">
+          <label for="usuario">E-mail</label>
+          <input type="email" id="usuario" name="login" placeholder="seu@email.com" required>
 
           <label for="senha">Senha</label>
           <input type="password" id="senha" name="senha" placeholder="Sua senha" required>
