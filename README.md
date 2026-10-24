@@ -1,420 +1,209 @@
 # Rota do Paciente
 
-> Um site que mostra, em tempo real, onde está o pedido médico de cada paciente, obriga a rede de saúde a trabalhar de forma completa e mostra ao gestor onde as coisas estão travando.
-
-Protótipo desenvolvido para o Hackathon, tema **Saúde Conectada**.
-
-| | |
-|---|---|
-| **Eixo principal** | Interligação (UBS ↔ Especializadas ↔ Hospitais) |
-| **Stack** | HTML, CSS, JavaScript, PHP e MySQL |
-| **Equipe** | 5 pessoas |
-| **Prazo** | 1 dia |
-
-> **Nome:** "Rota do Paciente" é o nome de trabalho. Alternativas consideradas: **Elo**, RastreiaSUS, TrilhaSaúde, ConectaCuidado, Ponte SUS.
-
----
-
 ## Sumário
 
-1. [A ideia em palavras simples](#1-a-ideia-em-palavras-simples)
+1. [De onde veio a ideia](#1-de-onde-veio-a-ideia)
 2. [O problema](#2-o-problema)
-3. [A solução](#3-a-solução)
-4. [Quem usa o sistema](#4-quem-usa-o-sistema)
-5. [A interface da paciente](#5-a-interface-da-paciente)
-6. [Ciclo de vida do encaminhamento](#6-ciclo-de-vida-do-encaminhamento)
-7. [Funcionalidades em detalhe](#7-funcionalidades-em-detalhe)
-8. [Exemplo completo, do começo ao fim](#8-exemplo-completo-do-começo-ao-fim)
-9. [O que é real e o que é simulado](#9-o-que-é-real-e-o-que-é-simulado)
-10. [Prioridade de entrega](#10-prioridade-de-entrega)
-11. [Banco de dados](#11-banco-de-dados)
-12. [Divisão do time](#12-divisão-do-time)
-13. [Cronograma de 1 dia](#13-cronograma-de-1-dia)
-14. [Roteiro da demo](#14-roteiro-da-demo)
-15. [Cuidados técnicos e segurança](#15-cuidados-técnicos-e-segurança)
-16. [Pontos para o pitch](#16-pontos-para-o-pitch)
-17. [Ideias complementares](#17-ideias-complementares)
-
-**Regra do protótipo:** tudo que o jurado vê tem que funcionar de verdade no fluxo principal. O que seria caro de fazer (integrações, upload real, notificações reais) é simulado, e o grupo diz isso abertamente no pitch.
+3. [O que a realidade mostra](#3-o-que-a-realidade-mostra)
+4. [A nossa proposta](#4-a-nossa-proposta)
+5. [Quem usa e para quê](#5-quem-usa-e-para-quê)
+6. [O caminho de um encaminhamento](#6-o-caminho-de-um-encaminhamento)
+7. [Como cada parte funciona](#7-como-cada-parte-funciona)
+8. [A tela do paciente](#8-a-tela-do-paciente)
+9. [Um exemplo do começo ao fim](#9-um-exemplo-do-começo-ao-fim)
+10. [Diferença para os sistemas de regulação](#10-diferença-para-os-sistemas-de-regulação)
+11. [O que o protótipo mostra e o que fica de fora](#11-o-que-o-protótipo-mostra-e-o-que-fica-de-fora)
+12. [Próximos passos](#12-próximos-passos)
+13. [Fontes](#13-fontes)
 
 ---
 
-## 1. A ideia em palavras simples
+## 1. De onde veio a ideia
 
-A dona Maria vai ao postinho de saúde. O médico diz: "A senhora precisa de um médico do coração. Vou fazer um pedido."
+O tema do hackathon tem quatro eixos: as UBS (os postos de saúde), as unidades especializadas (cardiologia, neurologia e outras), os hospitais e a ligação entre os três. Quando discutimos os problemas de cada um, percebemos que o que mais aparecia era o mesmo: as coisas se perdem na passagem de um ponto para o outro.
 
-Maria volta para casa e **não sabe nada**: o pedido foi aceito? Quando será a consulta? Ninguém avisa.
-
-A nossa ideia é **a mesma coisa que o rastreio dos Correios, mas para o pedido médico**. Quando você compra algo na internet, recebe um código e vê: "pedido feito → saiu do depósito → a caminho → entregue". O pedido de Maria ganha um código, como `RP-7K3M9Q`, e ela acompanha cada etapa pelo celular.
-
-> ✅ Pedido feito → ✅ Em análise → ⏳ **Aguardando data da consulta** → ⬜ Consulta → ⬜ Resultado volta para o postinho
-
-### Resumo em uma frase
-
-**É um site que mostra onde está o pedido médico de cada paciente, exige que cada etapa da rede seja feita completa e dá ao gestor um painel dos gargalos.**
-
----
+O posto pede, a especializada recebe, o hospital interna, e cada um guarda a sua parte da história. O paciente fica no meio sem saber o que está acontecendo. Resolvemos trabalhar justamente nessa passagem, que é o eixo da interligação.
 
 ## 2. O problema
 
-Quando uma UBS encaminha um paciente a um especialista, o pedido entra em um "buraco negro":
+Pense na dona Maria, 62 anos, hipertensa. Ela vai ao posto e a médica diz que ela precisa de um cardiologista. A médica faz o pedido, e a partir daí começa uma espera sem informação:
 
-- O **paciente** não sabe se o pedido foi aceito, em que fila está ou quando será chamado.
-- A **UBS** não sabe se o encaminhamento foi devolvido por falta de exame.
-- O **especialista** atende, mas a UBS nunca recebe o retorno (o que foi diagnosticado e o que a UBS deve acompanhar).
-- O **gestor** não enxerga onde a rede trava.
+- Maria volta para casa e não sabe se o pedido foi aceito, em que fila ele está ou quando será chamada.
+- Se o pedido voltar porque faltou um exame, quase sempre ninguém avisa. Ela só descobre meses depois.
+- Quando ela finalmente consulta com o especialista, o que ele concluiu e o que o posto deve acompanhar nem sempre volta para a UBS.
+- Se ela for internada, o posto muitas vezes não sabe, e depois da alta ela fica sem acompanhamento nos dias mais delicados.
+- Quem administra a saúde da cidade não tem como ver onde os pedidos ficam parados.
 
-## 3. A solução
+Cada um desses pontos é pequeno, mas somados deixam o paciente perdido e a rede sem enxergar a si mesma.
 
-Cada encaminhamento vira um "pacote" com **código de rastreio** e um histórico de etapas. Cada ponto da rede atualiza a sua parte, e paciente, UBS e gestor veem em que pé está.
+## 3. O que a realidade mostra
 
-### Diferenciais (as "pegadinhas inteligentes")
+Procuramos notícias e relatórios recentes para ver se esse problema aparece fora da nossa imaginação. Aparece.
 
-1. **Link/QR público para o paciente.** Sem login, ele vê uma linha do tempo pelo celular.
-2. **Lista de exigências por especialidade.** Para pedir cardiologista, a UBS é obrigada a marcar que anexou o eletrocardiograma e os outros exames. Se faltar, o botão de enviar fica travado.
-3. **Semáforo de prioridade.** Verde, amarelo e vermelho mostram quem está mais grave. Quem tem dor no peito passa na frente de quem só faz check-up. Sem IA, só regras.
-4. **Alerta de atraso (SLA).** Pedido parado tempo demais fica vermelho no painel.
-5. **Resultado obrigatório (contrarreferência).** O especialista só fecha o caso escrevendo o que descobriu e o que a UBS deve fazer.
-6. **Alta hospitalar com retorno automático.** O hospital registra a alta e a UBS recebe o aviso: "esse paciente deve voltar em até 7 dias".
-7. **Aviso por WhatsApp sem API.** Botão que abre uma mensagem pronta (`wa.me`).
-8. **Painel do gestor.** Gráficos de gargalos e tempos por etapa.
+- Em junho de 2026, 430.223 pessoas esperavam por consulta especializada na rede municipal de São Paulo. A espera média era de 216 dias úteis, e 119 pessoas aguardavam havia cerca de cinco anos.
+- Em Minas Gerais, uma reportagem de setembro de 2026 mostra que não existe uma fila estadual unificada. Cidades como Belo Horizonte, Juiz de Fora e Uberlândia mantêm filas separadas, e um pesquisador da Fiocruz Minas afirma que o estado não sabe, de forma homogênea, se as filas estão diminuindo.
+- O Tribunal de Contas da União apontou, em auditoria de 2026, que muitos municípios não conseguem integrar seus dados ao sistema federal. Segundo o tribunal, só 6,8% das cirurgias realizadas em 2024 foram registradas na Rede Nacional de Dados em Saúde.
 
----
+Os números mostram filas grandes, mas o que mais nos chamou atenção foi a falta de visibilidade: nem o paciente nem o gestor conseguem acompanhar direito o que está acontecendo. É isso que o projeto tenta resolver. Ele não cria novas vagas, e deixamos isso claro para não prometer o que não podemos entregar.
 
-## 4. Quem usa o sistema
+## 4. A nossa proposta
 
-Cada perfil vê uma tela diferente.
+Funciona como o rastreio de uma encomenda. Quando alguém compra algo pela internet, recebe um código e vê cada etapa: pedido feito, saiu do depósito, a caminho, entregue. Fizemos o mesmo com o pedido médico.
 
-| Perfil | O que faz no sistema |
-|---|---|
-| **UBS** (profissional do postinho) | Cria o encaminhamento, preenche o checklist, recebe a contrarreferência e acompanha retornos |
-| **ESPECIALIZADA** (regulador/especialista) | Recebe a fila, confirma o agendamento, atende e preenche a contrarreferência |
-| **HOSPITAL** | Registra a alta do paciente |
-| **GESTOR** | Só visualiza o painel com indicadores |
-| **Paciente** | Sem login. Acessa pelo código ou QR e só vê o andamento |
+Cada encaminhamento ganha um código, por exemplo RP-7K3M9Q, e passa por etapas visíveis. Cada ponto da rede (posto, especializada, hospital) cuida da sua etapa, e o paciente e o gestor veem o resultado em tempo real.
 
-**No protótipo:** 4 usuários fixos de teste (um por perfil, com senha), criados no script SQL. Sem cadastro de usuários nem recuperação de senha. Para a demo, a tela de login pode ter botões "entrar como UBS / Especializada / Hospital / Gestor".
+Além do rastreio, o sistema impõe algumas regras que atacam diretamente os problemas da seção 2: o posto precisa enviar o pedido completo, o especialista precisa devolver o resultado, e a alta do hospital gera um retorno no posto. Essas regras são o diferencial do projeto.
 
-### O que é o campo `perfil` no banco de dados
+O sistema foi pensado para a rede municipal de saúde, e o gestor que o utiliza é o gestor municipal, ou seja, o secretário de saúde e, em última instância, o prefeito.
 
-O campo `perfil`, na tabela `usuarios`, diz **que tipo de funcionário** é aquela pessoa. É ele que decide **o que ela pode ver e fazer**.
+## 5. Quem usa e para quê
 
-| id | nome | perfil | unidade_id |
-|---|---|---|---|
-| 1 | Dra. Ana | `UBS` | 1 (Posto Centro) |
-| 2 | Dr. Carlos | `ESPECIALIZADA` | 5 (Clínica do Coração) |
-| 3 | Enf. Paula | `HOSPITAL` | 8 (Hospital Municipal) |
-| 4 | Sr. Roberto | `GESTOR` | 10 (Secretaria de Saúde) |
+O sistema tem cinco tipos de usuário, e cada um enxerga uma tela diferente.
 
-- `perfil` é **o papel** da pessoa (o que ela faz).
-- `unidade_id` é **o lugar** onde ela trabalha.
+**Profissional da UBS.** Cria o encaminhamento, preenche o que a especialidade exige, acompanha os pedidos do seu posto e recebe de volta o resultado do especialista. Também vê a lista de pacientes que tiveram alta no hospital e precisam de acompanhamento.
 
-Ao fazer login, o PHP guarda o perfil na sessão e confere em cada página e em cada ação:
+**Profissional da especializada.** Recebe os pedidos, analisa, marca a consulta, atende e devolve o resultado para o posto. Se faltar alguma informação, devolve o pedido explicando o motivo.
 
-```php
-if ($_SESSION['perfil'] !== 'UBS') {
-    die('Acesso negado');
-}
-```
+**Profissional do hospital.** Registra a alta do paciente, com um resumo e os medicamentos prescritos.
 
-Regras de cada perfil:
+**Gestor municipal.** Só consulta. Vê um painel com a situação geral da rede e os pontos onde os pedidos estão parados.
 
-- `UBS`: cria encaminhamento, mas **não** marca "atendido".
-- `ESPECIALIZADA`: agenda, atende e preenche a contrarreferência, mas **não** cria encaminhamento.
-- `HOSPITAL`: só registra altas.
-- `GESTOR`: só vê o painel.
+**Paciente.** Não precisa de cadastro nem senha. Acessa com o código do seu encaminhamento e acompanha o andamento.
 
-Use **ENUM** no MySQL, que aceita só valores da lista e evita erros de digitação:
+## 6. O caminho de um encaminhamento
 
-```sql
-perfil ENUM('UBS','ESPECIALIZADA','HOSPITAL','GESTOR') NOT NULL
-```
+Todo encaminhamento segue as mesmas etapas, nesta ordem:
 
-A paciente **não aparece** na tabela `usuarios`, porque não faz login.
+1. **Pedido enviado.** O posto criou o encaminhamento.
+2. **Em análise.** A especializada está avaliando o pedido.
+3. **Consulta agendada.** Já existem data, horário e local definidos.
+4. **Atendimento realizado.** O paciente foi atendido pelo especialista.
+5. **Retorno enviado à UBS.** O especialista devolveu o resultado para o posto.
+6. **Concluído.** O posto leu o retorno e assumiu o acompanhamento do paciente.
 
----
+Existe ainda um desvio. Se a especializada perceber que falta algo no pedido, ela o devolve ao posto com o motivo escrito. O posto corrige, reenvia, e o caminho continua de onde parou.
 
-## 5. A interface da paciente
+O sistema não deixa ninguém pular etapas. Um posto, por exemplo, não consegue marcar um paciente como atendido, porque essa etapa pertence à especializada. Cada passo registra quem fez e quando, e é esse histórico que alimenta a tela do paciente e o painel do gestor.
 
-A Maria ganha uma interface simples: uma **página web que abre no navegador do celular**. Ela não precisa baixar app, criar conta nem lembrar senha.
+## 7. Como cada parte funciona
 
-### Como ela chega à página
+### 7.1 Criar o encaminhamento
 
-1. **QR code:** a UBS entrega o QR impresso no comprovante do pedido, e ela aponta a câmera do celular.
-2. **Link por WhatsApp:** o profissional clica no botão de aviso, e a mensagem já vai com o link.
-3. **Digitando o código:** ela abre o endereço do site (por exemplo `/acompanhar`) e digita o código do pedido.
+O profissional do posto escolhe o paciente, a especialidade de destino, descreve o motivo do pedido e marca se há algum sinal de alarme. Ao enviar, o sistema gera o código de rastreio e mostra uma tela de confirmação com um QR code, que pode ser impresso ou mostrado ao paciente. Também há um botão que abre uma mensagem pronta de WhatsApp com o código e o link de acompanhamento, para o profissional só precisar enviar.
 
-### O que ela vê
+### 7.2 Lista de exigências por especialidade
 
-- Primeiro nome e inicial do sobrenome ("Maria S.").
-- A especialidade ("Cardiologia").
-- A **linha do tempo**: etapas já feitas marcadas, a atual destacada e as próximas apagadas.
-- Uma frase em linguagem simples sobre a etapa atual: "Seu pedido está sendo analisado. Aguarde o agendamento."
-- Quando agendado: data, hora, local e o que levar.
+Cada especialidade tem uma lista do que precisa acompanhar o pedido. Para cardiologia, por exemplo: eletrocardiograma recente, pressão aferida, lista de medicamentos em uso e exames de colesterol e glicemia.
 
-### O que ela NÃO vê
-
-Diagnóstico, motivo clínico e observações dos profissionais. Qualquer pessoa com o código poderia abrir a página, então só dados mínimos aparecem. O código tem parte aleatória (`RP-7K3M9Q`), para ninguém acertar o de outra pessoa por tentativa.
-
-### Mais de um encaminhamento
-
-No protótipo, **cada encaminhamento tem o seu código**, e ela abre um por vez. Como bônus, uma página "Meus encaminhamentos" pode pedir CNS e data de nascimento e listar todos os pedidos (exige mais cuidado com segurança).
-
-### Como fazer
-
-Uma página PHP (`acompanhar.php?codigo=...`) que recebe o código pela URL, consulta a tabela `eventos` e desenha a linha do tempo em HTML/CSS. O QR é gerado na tela da UBS com a biblioteca `qrcode.js`.
-
-Para escanear na demo, o projeto precisa estar acessível pelo celular: mesma rede Wi-Fi usando o IP do computador, ou um túnel como o ngrok.
-
----
-
-## 6. Ciclo de vida do encaminhamento
-
-É o centro do sistema. Cada encaminhamento tem um `status` e só avança na ordem correta:
-
-1. **SOLICITADO**: a UBS criou o pedido.
-2. **EM_REGULACAO**: a especializada está analisando.
-3. **AGENDADO**: data e hora definidas.
-4. **ATENDIDO**: o paciente foi atendido pelo especialista.
-5. **CONTRARREFERENCIA_ENVIADA**: o especialista devolveu o parecer para a UBS.
-6. **CONCLUIDO**: a UBS leu e assumiu o seguimento.
-
-Desvio: **DEVOLVIDO**. A especializada devolve por informação faltante, com motivo escrito, e a UBS corrige e reenvia.
-
-**Como implementar:** um array em PHP com as transições permitidas, por exemplo `'SOLICITADO' => ['EM_REGULACAO']`. Antes de atualizar o status, o PHP confere se a transição é válida **e** se o perfil logado tem permissão para aquela etapa. Isso mostra regra de negócio, não só CRUD.
-
-**Toda mudança grava uma linha na tabela `eventos`** (etapa, quem fez, quando, observação). A linha do tempo e as métricas do painel saem dela.
-
----
-
-## 7. Funcionalidades em detalhe
-
-### 7.1 Criação do encaminhamento (UBS)
-
-Formulário com: paciente (busca por nome ou CNS), especialidade de destino, motivo clínico, sinais de alarme (checkboxes) e checklist da especialidade. Ao salvar, o sistema gera o **código de rastreio**, registra o primeiro evento e abre uma tela de confirmação com o QR e o botão de WhatsApp.
-
-**Protótipo:** pacientes pré-cadastrados no seed. Cadastro de paciente novo é opcional.
-
-### 7.2 Checklist obrigatório por especialidade
-
-**Problema que resolve:** encaminhamentos incompletos são devolvidos e o paciente perde semanas.
-
-Cada especialidade tem uma lista de exigências no banco. Exemplo para Cardiologia:
-
-- ECG recente
-- Pressão arterial aferida
-- Lista de medicamentos em uso
-- Exames de colesterol e glicemia
-
-Ao escolher a especialidade, o formulário carrega o checklist via JS (`fetch` em um endpoint PHP que devolve JSON). O botão "Enviar" fica desabilitado até todos os itens obrigatórios estarem marcados. **A validação é repetida no PHP**, porque validar só no navegador é contornável.
-
-**Protótipo:** cada item é um checkbox "documento anexado" (ou um upload que só guarda o nome do arquivo). O foco é demonstrar a regra, não o armazenamento.
-
-> As exigências acima são exemplos. No pitch, dizer que a lista seria definida por protocolos clínicos reais e editável pela gestão.
+O botão de enviar fica bloqueado até o profissional marcar todos os itens obrigatórios. A intenção é evitar um problema comum: o pedido que chega incompleto, volta, e faz o paciente perder semanas. As exigências que usamos são exemplos. Em um uso real, a lista seria definida pelos protocolos clínicos do município e poderia ser editada pela gestão.
 
 ### 7.3 Semáforo de prioridade
 
-| Fator | Pontos |
-|---|---|
-| Idade ≥ 60 | +1 |
-| Comorbidade (hipertensão, diabetes, etc.) | +1 cada |
-| Sinal de alarme (dor no peito, perda de força súbita, etc.) | +3 cada |
+Nem todos os pedidos têm a mesma urgência, e a ordem de chegada nem sempre é a mais justa. O sistema faz uma classificação simples em três cores:
 
-Resultado: **0 a 2 = 🟢 verde**, **3 a 4 = 🟡 amarelo**, **5 ou mais = 🔴 vermelho**.
+- Verde: situação de menor risco.
+- Amarelo: atenção intermediária.
+- Vermelho: risco maior, que deve ser visto primeiro.
 
-A fila da especializada é ordenada primeiro por cor e depois por data de criação.
+A cor sai de uma soma de pontos. Idade de 60 anos ou mais soma um ponto, cada doença crônica relevante soma um ponto, e cada sinal de alarme (como dor no peito ou perda súbita de força) soma três. Quem tem uma pontuação maior sobe na fila da especializada.
 
-> **No pitch:** é uma regra simples de **apoio à decisão, não um protocolo clínico validado**. A versão real seguiria protocolos oficiais de regulação, e a decisão final é sempre humana.
+É importante dizer que essa regra é uma ajuda para a equipe e não um protocolo clínico validado. A decisão final continua sendo sempre do profissional de saúde. Em uma versão real, os critérios viriam dos protocolos oficiais de regulação.
 
-### 7.4 Alerta de gargalo (SLA)
+### 7.4 Alerta de atraso
 
-Cada especialidade tem um prazo máximo por etapa (ex.: regulação em até 5 dias). O PHP compara `NOW()` com a data do último evento. Se `dias parados > sla_dias`, a linha aparece em vermelho nos painéis da especializada e do gestor, com a contagem de dias.
+Cada especialidade tem um prazo razoável para que um pedido fique parado em uma mesma etapa. Se esse prazo estoura, o pedido aparece destacado em vermelho, com a contagem de dias, na tela da especializada e no painel do gestor. Assim, ninguém precisa descobrir por acaso que um pedido ficou esquecido.
 
-**Protótipo:** sem verificação em segundo plano. O cálculo acontece ao carregar a página. Nos dados fictícios, deixar de propósito alguns encaminhamentos com datas antigas para os alertas aparecerem na demo (declarando que são dados de teste).
+### 7.5 Resultado obrigatório (contrarreferência)
 
-### 7.5 Contrarreferência obrigatória
+Para fechar um atendimento, o especialista precisa preencher um pequeno retorno com quatro informações: o que concluiu sobre o caso, o que foi feito, o que o posto deve acompanhar e se o paciente precisa voltar ao especialista.
 
-**Problema:** o especialista atende e nada volta para a UBS.
+Quando o retorno é enviado, a UBS recebe um aviso destacado na sua tela. Só depois que o posto abre e confirma a leitura o caso é considerado concluído. Isso transforma em etapa obrigatória algo que hoje depende da boa vontade de cada profissional.
 
-Para fechar o atendimento, a especializada preenche um formulário curto:
+### 7.6 Alta do hospital
 
-- diagnóstico/impressão;
-- conduta adotada;
-- orientações para a UBS acompanhar;
-- precisa de retorno ao especialista? (sim/não e em quanto tempo).
+Alta é o momento em que o paciente sai do hospital porque pode continuar o tratamento fora dele. É um ponto delicado: ele sai com remédios novos e orientações, mas o posto onde ele é acompanhado muitas vezes nem sabe que ele esteve internado, e sem acompanhamento nos primeiros dias há risco de ele voltar ao hospital.
 
-Ao salvar, o encaminhamento vai para `CONTRARREFERENCIA_ENVIADA` e aparece em destaque na tela da UBS ("1 retorno aguardando leitura"). Quando a UBS abre e confirma, vira `CONCLUIDO`.
-
-### 7.6 Alta hospitalar com retorno automático
-
-O perfil Hospital registra uma alta (resumo curto e medicamentos prescritos). O PHP cria automaticamente uma tarefa de **retorno na UBS de origem em até 7 dias**, e a UBS vê a lista "Pacientes com alta recente a acompanhar".
-
-**Protótipo:** o paciente da demo tem uma UBS de referência cadastrada. O hospital escolhe o paciente em uma lista, sem modelar internação completa. Uma tabela simples `altas` basta.
+No sistema, o hospital registra a alta com um resumo curto e os medicamentos prescritos. A partir disso, o sistema cria automaticamente uma tarefa para o posto de referência do paciente: atendê-lo em até sete dias. Ela aparece na área de altas recentes da UBS. O prazo de sete dias foi uma escolha nossa para o protótipo, e em uso real seria definido pela rede.
 
 ### 7.7 Aviso por WhatsApp
 
-Botão que abre `https://wa.me/55NUMERO?text=...` com a mensagem pronta, por exemplo: "Olá, Maria. Sua consulta de Cardiologia foi agendada para 12/11 às 14h. Acompanhe: [link]". O profissional só clica em enviar.
-
-> Não é envio automático. No pitch, dizer que a versão real usaria a API oficial do WhatsApp Business ou SMS.
+Quando uma consulta é agendada, o profissional pode abrir uma mensagem pronta de WhatsApp com os dados da consulta e o link de acompanhamento, como "Olá, Maria. Sua consulta de Cardiologia foi agendada para 12/11 às 14h". O envio é manual, o sistema apenas prepara o texto. Uma versão completa usaria os canais oficiais de envio automático.
 
 ### 7.8 Painel do gestor
 
-Indicadores calculados com SQL sobre `eventos` e `encaminhamentos`, exibidos com **Chart.js**:
+O gestor municipal tem uma tela só de consulta, com os principais indicadores da rede:
 
-- total de encaminhamentos por status (barras);
-- tempo médio em cada etapa (barras);
-- encaminhamentos atrasados por especialidade (ranking de gargalos);
-- distribuição por prioridade verde/amarelo/vermelho (rosca);
-- lista dos casos críticos parados.
+- quantos encaminhamentos existem em cada etapa;
+- quanto tempo, em média, um pedido leva em cada etapa;
+- quais especialidades têm mais pedidos atrasados, o que mostra onde está o gargalo;
+- quantos casos são verdes, amarelos e vermelhos;
+- a lista dos casos mais graves que estão parados.
 
-Extras: filtro por especialidade e período; mapa das UBS com Leaflet, se sobrar tempo.
+A ideia é que quem decide possa ver onde agir, em vez de depender de relatos soltos.
 
----
+## 8. A tela do paciente
 
-## 8. Exemplo completo, do começo ao fim
+É a parte do sistema pensada para quem menos entende de tecnologia, e por isso foi feita para ser simples. É uma página que abre no navegador do celular, sem aplicativo, sem cadastro e sem senha.
 
-1. O médico do postinho cadastra o pedido da Maria. O sistema trava até ele marcar o eletrocardiograma. Depois, gera o código e o QR.
-2. Maria escaneia o QR e vê "Pedido enviado".
-3. O especialista abre o sistema, vê o pedido de Maria (cor amarela) e marca a consulta. Maria vê a nova etapa no celular.
-4. Depois da consulta, o especialista escreve o resultado. O postinho recebe o aviso: "voltou o resultado de Maria".
-5. O gestor abre o painel e vê: "Cardiologia tem 12 pedidos parados há mais de 15 dias". Agora ele sabe onde agir.
+O paciente chega até ela de três formas: apontando a câmera para o QR code do comprovante, clicando no link recebido por WhatsApp, ou digitando o código na página inicial.
 
----
+Ao entrar, ele vê:
 
-## 9. O que é real e o que é simulado
+- o primeiro nome e a inicial do sobrenome (por exemplo, Maria S.);
+- a especialidade do encaminhamento;
+- uma linha do tempo com as etapas, em que as concluídas aparecem marcadas em verde, a etapa atual fica destacada e as próximas aparecem apagadas;
+- uma frase em linguagem simples sobre o momento atual, como "Sua consulta foi agendada";
+- quando a consulta está marcada, a data, o horário, o local e o que levar.
 
-| Real (funciona de verdade) | Simulado/simplificado |
-|---|---|
-| Login por perfil e permissões | Usuários fixos, sem cadastro |
-| Criação e mudança de status com regras | Dados fictícios pré-carregados |
-| Checklist, semáforo, SLA, contrarreferência, alta | Anexos como checkbox |
-| Linha do tempo e QR | WhatsApp como link de atalho |
-| Painel com consultas reais ao banco | Sem integração com e-SUS/SISREG/RNDS |
+A página não mostra diagnóstico, motivo clínico nem observações dos profissionais. Como qualquer pessoa com o código poderia abrir a página, ela exibe só o mínimo necessário para o paciente se orientar. Por isso o código tem uma parte aleatória, para que seja difícil acertar o de outra pessoa.
 
-Falar isso no pitch passa maturidade, não fraqueza.
+## 9. Um exemplo do começo ao fim
 
----
+1. A médica do posto atende a dona Maria e decide encaminhá-la ao cardiologista. No sistema, ela só consegue enviar o pedido depois de confirmar que o eletrocardiograma e os outros exames estão anexados. O sistema classifica o caso como amarelo e gera o código RP-7K3M9Q e o QR code.
+2. Maria recebe o link pelo WhatsApp, abre no celular e vê que o pedido foi enviado.
+3. A especializada recebe o pedido, que aparece na posição certa da fila por causa da cor. Analisa, aceita e marca a consulta. Maria vê, no mesmo link, que a consulta foi agendada, com data, horário, local e o que levar.
+4. Depois da consulta, o cardiologista preenche o retorno. O posto recebe o aviso e Maria vê que o resultado foi enviado.
+5. Se, nesse meio tempo, ela tivesse sido internada, o hospital registraria a alta e o posto receberia a tarefa de atendê-la em até sete dias.
+6. Do outro lado, o gestor abre o painel e consegue ver, por exemplo, que a cardiologia tem vários pedidos parados há mais tempo do que o prazo, e sabe onde precisa agir.
 
-## 10. Prioridade de entrega
+## 10. Diferença para os sistemas de regulação
 
-**Obrigatório (sem isso não há demo):**
-- login por perfil;
-- criar encaminhamento com checklist;
-- mudar status com regras;
-- linha do tempo pública com QR;
-- contrarreferência.
+Existem sistemas de regulação em uso no SUS. Um exemplo é o Gercon, desenvolvido pela Procempa, de Porto Alegre, e usado em outras regiões do Rio Grande do Sul e em Goiás. Pelo que encontramos, ele organiza a fila de consultas especializadas e permite ao gestor estadual acompanhar a movimentação dos pedidos.
 
-**Importante:**
-- semáforo;
-- SLA no painel;
-- painel com 3 gráficos.
+O Rota do Paciente não pretende substituir esse tipo de sistema. A regulação decide quem entra na fila e quando. O nosso projeto olha para o caminho completo do paciente dentro da rede municipal: o pedido completo na origem, o retorno do resultado ao posto, a ligação com o hospital depois da alta e a visão do gestor da cidade.
 
-**Bônus (só se sobrar tempo):**
-- alta hospitalar com retorno;
-- botão de WhatsApp;
-- devolução com motivo;
-- página "Meus encaminhamentos";
-- mapa.
+Em uma situação real, os dois poderiam funcionar juntos. Quando o pedido precisar passar pela regulação estadual, o Rota do Paciente continuaria acompanhando e mostrando o andamento para o paciente e para o posto.
 
-Se o relógio apertar, cortar de baixo para cima.
+## 11. O que o protótipo mostra e o que fica de fora
 
----
+Por causa do tempo do hackathon, o que desenvolvemos é um protótipo. Dizemos isso abertamente.
 
-## 11. Banco de dados
+**O que o protótipo apresenta:**
+- a tela de entrada, com acesso do paciente pelo código e acesso dos profissionais;
+- a tela de cadastro de profissionais;
+- a tela do paciente, com a linha do tempo que muda conforme a etapa do encaminhamento;
+- a tela inicial do profissional da UBS.
 
-- `pacientes` (id, nome, cns, nascimento, telefone, ubs_referencia_id)
-- `unidades` (id, nome, tipo: UBS/ESPECIALIZADA/HOSPITAL)
-- `usuarios` (id, nome, **perfil**, unidade_id, senha_hash)
-- `especialidades` (id, nome, sla_dias)
-- `checklist_itens` (id, especialidade_id, descricao, obrigatorio)
-- `encaminhamentos` (id, codigo, paciente_id, origem_id, destino_id, especialidade_id, prioridade, status, criado_em)
-- `eventos` (id, encaminhamento_id, etapa, usuario_id, observacao, criado_em)
-- `contrarreferencias` (id, encaminhamento_id, diagnostico, conduta, seguimento_ubs, precisa_retorno)
-- `altas` (id, paciente_id, data_alta, resumo, ubs_retorno_id, prazo_retorno)
+**O que fica de fora ou é simulado:**
+- todos os dados são fictícios;
+- os códigos de teste apresentados na demonstração são exemplos preparados para mostrar as diferentes etapas;
+- as telas da especializada, do hospital e do gestor, e o formulário de novo encaminhamento, estão descritas neste documento mas ainda não foram construídas;
+- não existe integração com sistemas oficiais como o e-SUS ou os sistemas de regulação;
+- o envio por WhatsApp é um atalho manual, e anexos de exames seriam apenas marcados como entregues.
 
-A tabela `eventos` é o coração do projeto: a linha do tempo e o cálculo de tempo por etapa saem dela.
+## 12. Próximos passos
 
----
+Se o projeto continuasse, o caminho natural seria:
 
-## 12. Divisão do time
+- construir as telas que faltam, começando pelo formulário de novo encaminhamento com a lista de exigências;
+- validar com profissionais de saúde as listas de exigências, os critérios do semáforo e os prazos de atraso;
+- testar com uma UBS e uma especializada reais, em um recorte pequeno, para medir se os pedidos devolvidos diminuem;
+- estudar a integração com os sistemas de regulação e com a Rede Nacional de Dados em Saúde;
+- revisar com cuidado a proteção dos dados dos pacientes, conforme a LGPD, antes de qualquer uso real.
 
-| Pessoa | Responsabilidade |
-|---|---|
-| 1 | Banco de dados, scripts SQL, dados fictícios realistas (20 a 30 casos em estágios variados) |
-| 2 | Back-end PHP: login/perfis, cadastro e mudança de status, regras de checklist e semáforo (endpoints JSON) |
-| 3 | Tela da UBS: novo encaminhamento, checklist, lista de pacientes |
-| 4 | Tela pública da paciente (timeline + QR) e telas da especializada/hospital |
-| 5 | Painel do gestor (Chart.js) e depois pitch, slides e roteiro da demo |
+## 13. Fontes
 
-Todos usam o mesmo CSS base (cores e componentes definidos na primeira hora) para o sistema parecer um produto só.
-
----
-
-## 13. Cronograma de 1 dia
-
-| Período | Atividade |
-|---|---|
-| **Hora 0-1** | Fechar escopo, desenhar o banco, definir o padrão visual, criar o repositório no Git |
-| **Hora 1-3** | Banco pronto com dados fictícios, login, fluxo básico criar encaminhamento → mudar status |
-| **Hora 3-6** | Telas de cada perfil, timeline da paciente, checklist |
-| **Hora 6-8** | Semáforo, alertas de SLA, contrarreferência, alta com retorno |
-| **Hora 8-9** | Painel do gestor, QR, botão de WhatsApp |
-| **Últimas 2 horas** | Nada de funcionalidade nova. Testar o fluxo completo, corrigir bugs e ensaiar o pitch |
-
----
-
-## 14. Roteiro da demo (3 a 5 minutos)
-
-1. **Problema:** "Maria, 62 anos, hipertensa, foi encaminhada ao cardiologista há 3 meses e ninguém sabe onde está o pedido."
-2. A **UBS** cria o encaminhamento, o checklist bloqueia o envio até anexar o ECG, e o semáforo marca amarelo.
-3. Maria recebe o link/QR e acompanha **pelo celular** (mostrar o celular de verdade).
-4. A **especializada** atende e preenche a contrarreferência.
-5. O **hospital** registra uma alta e o retorno à UBS é criado sozinho.
-6. O **gestor** abre o painel e vê o gargalo: "Cardiologia está com 12 casos parados há mais de 15 dias."
-
-**Fechamento:** "Reduz devoluções, dá transparência ao paciente e dá ao gestor dados para agir."
-
----
-
-## 15. Cuidados técnicos e segurança
-
-- **PDO com prepared statements**, sem montar SQL por concatenação.
-- **`password_hash` / `password_verify`** para senhas.
-- **Sessões PHP** para controlar o acesso por perfil em cada página (não apenas esconder botões).
-- **`htmlspecialchars`** em todas as saídas, contra XSS.
-- Validação repetida no servidor, nunca só no navegador.
-- Página pública sem dados clínicos.
-
----
-
-## 16. Pontos para o pitch
-
-- **LGPD:** a tela pública mostra só nome abreviado e status; há perfis de acesso e consultas protegidas.
-- **Escalabilidade:** o modelo de dados pode ser mapeado para **FHIR/RNDS** no futuro, sem precisar implementar agora.
-- **Honestidade:** os dados são fictícios; a integração real com e-SUS/SISREG seria a próxima etapa.
-- **Responsabilidade clínica:** o semáforo é apoio à decisão, não protocolo validado.
-
----
-
-## 17. Ideias complementares
-
-Para citar no pitch como evolução do projeto.
-
-**UBS**
-- Previsão de faltas em consultas com lembretes e lista de espera dinâmica.
-- Busca ativa de pacientes crônicos (hipertensos e diabéticos) priorizada por risco.
-- Pré-triagem de demanda espontânea.
-- Previsão de demanda de medicamentos e vacinas por território.
-
-**Especializadas**
-- Telediagnóstico e teleinterconsulta (ECG, foto de lesão de pele, retinografia).
-- Linha de cuidado por especialidade (ex.: insuficiência cardíaca, pós-AVC).
-
-**Hospitais**
-- Previsão de demanda e gestão de leitos em tempo real.
-- Alerta precoce de sepse ou deterioração clínica.
-- Reconciliação de medicamentos na admissão e na alta.
-
-**Interligação**
-- Resumo clínico unificado em padrão FHIR/RNDS.
-- Painel municipal integrado com simulação de cenários.
+- Poder360, [Fila por especialista em São Paulo tem espera de até 5 anos](https://www.poder360.com.br/opiniao/fila-por-especialista-em-sao-paulo-tem-espera-de-ate-5-anos/), 12 de agosto de 2026.
+- Brasil de Fato, [Falta de articulação do governo estadual expõe filas por consultas e exames no SUS em MG](https://www.brasildefato.com.br/2026/09/18/falta-de-articulacao-do-governo-estadual-expoe-filas-por-consultas-e-exames-no-sus-em-mg/), 18 de setembro de 2026.
+- TCU, [TCU avalia programa Agora Tem Especialistas do Ministério da Saúde](https://portal.tcu.gov.br/imprensa/noticias/tcu-avalia-programa-agora-tem-especialistas-do-ministerio-da-saude), Acórdão 1622/2026.
+- Procempa, [Procempa implementa sistema de gerenciamento de consultas para uso em todo Estado](https://prefeitura.poa.br/procempa/noticias/procempa-implementa-sistema-de-gerenciamento-de-consultas-para-uso-em-todo-estado).
